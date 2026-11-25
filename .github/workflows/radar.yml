@@ -1,0 +1,25 @@
+name: Bounty radar
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 0,12 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bounty-radar
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    if: ${{ github.event.repository.visibility == 'public' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+      - run: node --version
+      - run: node radar.mjs
